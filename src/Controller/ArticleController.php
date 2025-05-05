@@ -13,8 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController {
 
 	#[Route('/create-article', name: "create-article")]
-
-    //entityManager permet d'interagir et gerer les transactions avec la base de données, il permet aussi de créer, recupérer, modifier ou supprimer les entitées, parmis lesquelles les Articles.
 	public function displayCreateArticle(Request $request, EntityManagerInterface $entityManager) {
 
 		if ($request->isMethod("POST")) {
@@ -48,29 +46,42 @@ class ArticleController extends AbstractController {
 			// sur chaque propriété de la classe Article pour les faire correspondre à des 
 			// colonnes dans la table article
 			$entityManager->persist($article);
-            //Cette ligne exécute toutes les opérations en attente, comme les persist, remove, etc.
 			$entityManager->flush();
 
 		}
 
 		return $this->render('create-article.html.twig');
 	}
-    
-    //cette ligne definit une route qui permettra grace a l'URL /list-articles de donner acces à la méthode controlller.
-    #[Route('/list-articles', name: 'list-articles')]
-    public function displayListArticles(ArticleRepository $articleRepository) {
-        // cette ligne appelle la méthode findAll qui recupère tous les Articles d'un table
-        $articles = $articleRepository->findAll();
-        // findAll retourne les Article enregistré de la base de donnée au fichier list-articles.html.twig qui permet de les afficher
+
+
+
+	#[Route('/list-articles', name: 'list-articles')]
+	public function displayListArticles(ArticleRepository $articleRepository) {
+
+		// permet de faire une requête SQL SELECT * sur la table article
+		$articles = $articleRepository->findAll();
+
 		return $this->render('list-articles.html.twig', [
 			'articles' => $articles
-        ]);
+		]);
 
-    }
-    //cette ligne permet d'acceder au détails de l'article et {id} permet de selectionner l'id de larticle demandé dans l'url
-	#[Route('/details-article/{id}', name: "details-article")]
-	public function displayDetailsArticle($id) {
-		dd($id);
 	}
-	
+
+
+	#[Route('/details-article/{id}', name: "details-article")]
+	public function displayDetailsArticle($id, ArticleRepository $articleRepository)
+	{
+		$article = $articleRepository->find($id);
+
+		// si l'article n'a pas été trouvé pour l'id demandé
+		// on envoie l'utilisateur vers la page qui affiche une erreur 404
+		if (!$article) {
+			return $this->redirectToRoute('404');
+		}
+
+		return $this->render('details-article.html.twig', [
+			'article' => $article
+		]);
+	}
+
 }
