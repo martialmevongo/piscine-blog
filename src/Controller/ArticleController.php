@@ -53,8 +53,6 @@ class ArticleController extends AbstractController {
 		return $this->render('create-article.html.twig');
 	}
 
-
-
 	#[Route('/list-articles', name: 'list-articles')]
 	public function displayListArticles(ArticleRepository $articleRepository) {
 
@@ -83,5 +81,23 @@ class ArticleController extends AbstractController {
 			'article' => $article
 		]);
 	}
+
+	#[Route('/delete-article/{id}', name: "delete-article")]
+	public function deleteArticle($id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager) 
+	{
+		// pour supprimer un article, je dois d'abord le récupérer
+		$article = $articleRepository->find($id);
+
+		// j'utilise la méthode remove de la classe EntityManager qui prend en parametre l'article à supprimer
+		$entityManager->remove($article);
+		$entityManager->flush();
+
+		// j'ajoute un message flash pour notifier que l'article est supprimé
+		$this->addFlash('success', 'article supprimé');
+
+		// je redirige vers la page de liste
+		return $this->redirectToRoute('list-articles');
+	}
+
 
 }
