@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,6 +56,7 @@ class ArticleController extends AbstractController {
 		return $this->render('create-article.html.twig');
 	}
     
+    //cette ligne definit une route qui permettra grace a l'URL /list-articles de donner acces à la méthode controlller.
     #[Route('/list-articles', name: 'list-articles')]
     public function displayListArticles(ArticleRepository $articleRepository) {
         // cette ligne appelle la méthode findAll qui recupère tous les Articles d'un table
@@ -63,6 +65,12 @@ class ArticleController extends AbstractController {
 		return $this->render('list-articles.html.twig', [
 			'articles' => $articles
         ]);
-    }
 
+    }
+    
+	#[Route('/details-article/{id}', name: "details-article")]
+	public function displayDetailsArticle($id) {
+		dd($id);
+	}
+	
 }
