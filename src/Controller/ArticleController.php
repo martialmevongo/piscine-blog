@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController {
 
 	#[Route('/create-article', name: "create-article")]
+
+    //entityManager permet d'interagir et gerer les transactions avec la base de données, il permet aussi de créer, recupérer, modifier ou supprimer les entitées, parmis lesquelles les Articles.
 	public function displayCreateArticle(Request $request, EntityManagerInterface $entityManager) {
 
 		if ($request->isMethod("POST")) {
@@ -36,16 +38,31 @@ class ArticleController extends AbstractController {
 
 			// méthode 2
 			// avec le constructor
+			// permet de faire de l'encapsulation
 			$article = new Article($title, $content, $description, $image);
 
-			// j'utilise la classe entityManager de symfony
-			// pour récupérer toutes les valeurs de l'entité Article créée
-			// et les enregistrer dans la table article correspondante à l'entité (via SQL insert)
+			// récupère les données (les valeurs des propriétés) de la l'instance de classe Article (entité Article)
+			// et les insère dans la table Article
+			// Symfony peut faire ça directement, car on a utilisé le mapping
+			// sur chaque propriété de la classe Article pour les faire correspondre à des 
+			// colonnes dans la table article
 			$entityManager->persist($article);
+            //Cette ligne exécute toutes les opérations en attente, comme les persist, remove, etc.
 			$entityManager->flush();
+
 		}
 
 		return $this->render('create-article.html.twig');
 	}
+    
+    #[Route('/list-articles', name: 'list-articles')]
+    public function displayListArticles(ArticleRepository $articleRepository) {
+        // cette ligne appelle la méthode findAll qui recupère tous les Articles d'un table
+        $articles = $articleRepository->findAll();
+        // findAll retourne les Article enregistré de la base de donnée au fichier list-articles.html.twig qui permet de les afficher
+		return $this->render('list-articles.html.twig', [
+			'articles' => $articles
+        ]);
+    }
 
 }
