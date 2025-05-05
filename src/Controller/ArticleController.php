@@ -67,7 +67,7 @@ class ArticleController extends AbstractController {
         ]);
 
     }
-    
+    //cette ligne permet d'acceder au détails de l'article et {id} permet de selectionner l'id de larticle demandé dans l'url
 	#[Route('/details-article/{id}', name: "details-article")]
 	public function displayDetailsArticle($id) {
 		dd($id);
