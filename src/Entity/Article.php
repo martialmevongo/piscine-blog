@@ -32,6 +32,9 @@ class Article
     #[ORM\Column]
     private ?bool $isPublished = null;
 
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?category $category = null;
+
 
     public function __construct($title, $content, $description, $image) {
 
@@ -117,6 +120,18 @@ class Article
     public function setIsPublished(bool $isPublished): static
     {
         $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getCategory(): ?category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
