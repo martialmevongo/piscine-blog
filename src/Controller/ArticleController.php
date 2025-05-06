@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Dom\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -99,5 +100,44 @@ class ArticleController extends AbstractController {
 		return $this->redirectToRoute('list-articles');
 	}
 
+	#[Route(path: '/update-article/{id}', name: "update-article")]
+	public function displayUpdateArticle($id, ArticleRepository $articleRepository, Request $request, EntityManagerInterface $entityManager) {
+
+		$article = $articleRepository->find($id);
+
+
+		if ($request->isMethod("POST")) {
+
+			$title = $request->request->get('title');
+			$description = $request->request->get('description');
+			$content = $request->request->get('content');
+			$image = $request->request->get('image');
+						
+			// méthode 1 : mise à jour de l'article avec les fonctions set (setter)
+			//$article->setTitle($title);
+			//$article->setDescription($description);
+			//$article->setContent($content);
+			//$article->setImage($image);
+
+			// méthode : mise de l'article avec une méthode update (respecte l'encapsulation)
+
+			//j'utilise la methose setter pour mettre à jour les propriétés de l'entité Article
+			$article->setTitle($title);
+            $article->setContent($content);
+            $article->setDescription($description);
+            $article->setImage($image);
+            // persist permet d'enregistrer l'entité $article
+			$entityManager->persist($article);
+			
+			$entityManager->flush();
+
+		
+		}
+
+		return $this->render('update-article.html.twig', [
+			'article' => $article
+		]);
+
+	}
 
 }
