@@ -10,7 +10,7 @@
 	<header class="header">
 
 		<a href="{{ path('home') }}">
-			<img class="logo-header" src="{{asset('assets/img/logo.jpg') }}" alt="logo recettes" />
+			<img class="logo-header" src="{{ asset('assets/img/logo.jpg') }}" alt="logo recettes" />
 		</a>
 
 		<nav class="nav-header">
@@ -19,7 +19,9 @@
 
 				<li><a href="{{ path('home') }}">Accueil</a></li>
 				<li><a href="{{ path('list-articles') }}">Liste des articles</a></li>
-				<li><a href="{{ path('create-article') }}">créez un article</a></li>
+				<li><a href="{{ path('create-article') }}">créer un article</a></li>
+				<li><a href="{{ path('list-categories') }}">liste des categories</a></li>
+				<li><a href="{{ path('create-category') }}">créer une categories</a></li>
 			</ul>
 
 
