@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Dom\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends AbstractController {
 
 	#[Route('/create-article', name: "create-article")]
-	public function displayCreateArticle(Request $request, EntityManagerInterface $entityManager) {
+	public function displayCreateArticle(Request $request, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository,) {
 
 		if ($request->isMethod("POST")) {
 
@@ -22,6 +22,8 @@ class ArticleController extends AbstractController {
 			$description = $request->request->get('description');
 			$content = $request->request->get('content');
 			$image = $request->request->get('image');
+
+
 
 
 			// méthode 1
@@ -51,7 +53,11 @@ class ArticleController extends AbstractController {
 
 		}
 
-		return $this->render('create-article.html.twig');
+		$categories = $categoryRepository->findAll();
+
+		return $this->render('create-article.html.twig', [
+			'categories' => $categories
+		]);
 	}
 
 	#[Route('/list-articles', name: 'list-articles')]

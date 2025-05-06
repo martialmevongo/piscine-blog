@@ -9,8 +9,15 @@
 
 		<label>Titre
 			<input type="text" name="title">
-		</label>
+		</label>		
 
+		<select name="category">
+
+			{% for category in categories %}
+				<option value="{{ category.id }}">{{ category.title}}</option>
+			{% endfor %}
+
+		</select>
 
 		<label>Description
 			<input type="text" name="description">

@@ -33,7 +33,7 @@ class Article
     private ?bool $isPublished = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    private ?category $category = null;
+    private ?Category $category = null;
 
 
     public function __construct($title, $content, $description, $image) {
